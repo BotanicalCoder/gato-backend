@@ -1,65 +1,63 @@
-# Gato: Empower Your Productivity with Gamified Todos 🚀
+# Gato: Gamified Todo Backend API 🎯
 
-## Overview
+This project is a robust Spring Boot backend for a gamified todo application. It provides a complete API for user authentication, managing todos, and incorporates a unique gamification system rewarding users with points and badges for their productivity and consistency. Built with modern Java standards, Spring Security, and a PostgreSQL database, it's designed for scalability and maintainability.
 
-Gato is a modern Spring Boot backend application designed to gamify your daily tasks. It provides a robust RESTful API for user authentication, personalized todo management, and an engaging gamification system that rewards users with points, streaks, and badges for their accomplishments. Built with a focus on clean architecture and security, Gato leverages industry-standard technologies to deliver a high-performance and scalable solution for boosting user productivity. ✨
+---
 
-## Features
+## 🚀 Getting Started
 
-- **User Authentication**: Secure registration, login, and password management with JWT tokens.
-- **Todo Management**: Create, retrieve, and mark tasks as complete.
-- **Gamification System**: Earn points, build streaks, and unlock unique badges for completing todos.
-- **JWT-based Security**: Protect API endpoints with stateless JSON Web Tokens.
-- **PostgreSQL Database**: Persistent storage for all application data.
-- **Flyway Database Migrations**: Manage database schema evolution reliably.
-- **Comprehensive Error Handling**: Graceful error responses for validation, authentication, and other issues.
-- **Dockerized Deployment**: Easy setup and deployment using Docker and Docker Compose.
-
-## Getting Started
-
-To get the Gato API running locally, follow these steps:
+Follow these steps to set up the Gato API backend on your local machine.
 
 ### Installation
 
-1.  **Clone the Repository**:
-    ```bash
-    git clone <repository-url>
-    cd gato
-    ```
-2.  **Start with Docker Compose**:
-    The project includes a `docker-compose.yml` file for easy setup of both the PostgreSQL database and the Spring Boot application.
-    ```bash
-    docker-compose up --build
-    ```
-    This command will:
-    - Build the Docker image for the Spring Boot application.
-    - Start a PostgreSQL container.
-    - Apply Flyway database migrations automatically.
-    - Start the Gato API server, accessible on `http://localhost:8080`.
+For the easiest setup, use Docker Compose:
+
+- 🐳 **Ensure Docker is Running**: Make sure Docker Desktop or Docker Engine is installed and running on your system.
+- 📦 **Clone the Repository**:
+  ```bash
+  git clone https://github.com/BotanicalCoder/gato-backend.git
+  cd gato-backend
+  ```
+- 🛠️ **Build and Run with Docker Compose**:
+  ```bash
+  docker compose up --build -d
+  ```
+  This command will build the Docker image, set up a PostgreSQL database, and start the Spring Boot application, making it accessible on `http://localhost:8080`.
+
+**Alternatively, to run directly using Maven:**
+
+- ☕ **Java Development Kit (JDK)**: Ensure you have JDK 17 or newer installed.
+- 📦 **Clone the Repository**:
+  ```bash
+  git clone https://github.com/BotanicalCoder/gato-backend.git
+  cd gato-backend
+  ```
+- ⚙️ **Database Setup**: Manually set up a PostgreSQL database. Ensure the database name, username, and password match your `application.yml` or `application.properties` configuration (or provide them as environment variables). Flyway will handle migrations on startup.
+- 🚀 **Run the Application**:
+  ```bash
+  ./mvnw spring-boot:run
+  ```
 
 ### Environment Variables
 
-The application requires the following environment variables to be configured. When running with `docker-compose up`, these are automatically picked up from the `docker-compose.yml` file. For local development outside Docker, you would set these in your `application.yml` or `application.properties` or as system environment variables.
+The application relies on several environment variables for configuration. When running with Docker Compose, these are defined in `docker-compose.yml`. When running locally with Maven, you can set them in your shell or define them in `src/main/resources/application.yml` or `application.properties`.
 
-- `SPRING_DATASOURCE_URL`: JDBC URL for the PostgreSQL database.
-  - **Example**: `jdbc:postgresql://db:5432/gato_db` (for Docker Compose)
-  - **Example**: `jdbc:postgresql://localhost:5432/gato_db` (for local run)
-- `SPRING_DATASOURCE_USERNAME`: Database username.
-  - **Example**: `gato`
-- `SPRING_DATASOURCE_PASSWORD`: Database password.
-  - **Example**: `gato`
-- `APP_JWT_SECRET`: A long, random string (at least 32 bytes) used for signing JWT tokens. **CRITICAL for security! Change this in production.**
-  - **Example**: `0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab`
-- `APP_JWT_EXPIRYMINUTES`: Expiration time for JWT tokens in minutes.
-  - **Example**: `60`
-- `APP_PASSWORDRESET_TOKENTTLMINUTES`: Time-to-live for password reset tokens in minutes.
-  - **Example**: `30`
+| Variable Name                       | Description                                                                                        | Example Value (Docker Compose)                                                            | Example Value (local `application.yml`)                                                                                                                 |
+| :---------------------------------- | :------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `SPRING_DATASOURCE_URL`             | JDBC URL for the PostgreSQL database.                                                              | `jdbc:postgresql://db:5432/gato_db`                                                       | `jdbc:postgresql://localhost:5432/gato_db`                                                                                                              |
+| `SPRING_DATASOURCE_USERNAME`        | Database username.                                                                                 | `gato`                                                                                    | `gato`                                                                                                                                                  |
+| `SPRING_DATASOURCE_PASSWORD`        | Database password.                                                                                 | `gato`                                                                                    | `gato`                                                                                                                                                  |
+| `APP_JWT_SECRET`                    | Secret key for signing JWT tokens. **Crucial for security, must be strong and at least 32 bytes.** | `0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab` (long, randomly generated) | `'0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab'` (long, randomly generated) |
+| `APP_JWT_EXPIRYMINUTES`             | JWT token expiry duration in minutes.                                                              | `60`                                                                                      | `60`                                                                                                                                                    |
+| `APP_PASSWORDRESET_TOKENTTLMINUTES` | Password reset token time-to-live in minutes.                                                      | `30`                                                                                      | `30`                                                                                                                                                    |
 
-## API Documentation
+---
+
+## 📖 API Documentation
 
 ### Base URL
 
-`http://localhost:8080/api`
+The API root path for all endpoints is `http://localhost:8080/api`.
 
 ### Endpoints
 
@@ -77,6 +75,10 @@ Registers a new user account.
 }
 ```
 
+- `email` (string, required): User's email address. Must be a valid email format.
+- `displayName` (string, required): User's display name. Cannot be blank.
+- `password` (string, required): User's password. Must be at least 8 characters long and contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character.
+
 **Response**:
 
 ```json
@@ -89,20 +91,8 @@ Registers a new user account.
 
 **Errors**:
 
-- `400 Bad Request`: Validation errors (e.g., invalid email, password not meeting complexity requirements).
-  ```json
-  {
-    "error": "password Password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character."
-  }
-  ```
-- `409 Conflict`: Email already in use.
-  ```json
-  {
-    "message": "Email already in use",
-    "success": false,
-    "data": {}
-  }
-  ```
+- `400 Bad Request`: Validation error (e.g., invalid email format, weak password, blank display name).
+- `409 Conflict`: Email address is already in use.
 
 #### `POST /api/auth/login`
 
@@ -117,6 +107,9 @@ Authenticates a user and returns a JWT token.
 }
 ```
 
+- `email` (string, required): User's email address.
+- `password` (string, required): User's password.
+
 **Response**:
 
 ```json
@@ -124,24 +117,19 @@ Authenticates a user and returns a JWT token.
   "message": "Logged in",
   "success": true,
   "data": {
-    "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzE5NTU0MjA3LCJleHAiOjE3MTk1NTc4MDd9.EXAMPLE_JWT_TOKEN"
+    "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyQGV4YW1wbGUuY29tIiwiaWF0IjoxNjcyNTYwMDAwLCJleHAiOjE2NzI1NjM2MDB9.EXAMPLE_JWT_TOKEN"
   }
 }
 ```
 
 **Errors**:
 
-- `401 Unauthorized`: Invalid credentials.
-  ```json
-  {
-    "success": false,
-    "message": "Invalid credentials"
-  }
-  ```
+- `400 Bad Request`: Validation error (e.g., invalid email format, blank password).
+- `401 Unauthorized`: Invalid credentials (email or password incorrect).
 
 #### `POST /api/auth/forgot-password`
 
-Initiates a password reset process by sending a token to the user's email.
+Initiates the password reset process by sending a token to the user's email.
 
 **Request**:
 
@@ -151,6 +139,8 @@ Initiates a password reset process by sending a token to the user's email.
 }
 ```
 
+- `email` (string, required): User's email address.
+
 **Response**:
 
 ```json
@@ -159,9 +149,11 @@ Initiates a password reset process by sending a token to the user's email.
 }
 ```
 
+(Always returns 200 OK to prevent email enumeration attacks).
+
 **Errors**:
 
-- `400 Bad Request`: Invalid email format.
+- `400 Bad Request`: Validation error (e.g., invalid email format).
 
 #### `POST /api/auth/reset-password`
 
@@ -171,10 +163,13 @@ Resets the user's password using a provided token.
 
 ```json
 {
-  "token": "a-valid-reset-token-uuid",
-  "newPassword": "NewStrongPassword456#"
+  "token": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+  "newPassword": "NewStrongPassword456!"
 }
 ```
+
+- `token` (string, required): The password reset token received via email.
+- `newPassword` (string, required): The new password. Must meet the same complexity requirements as registration.
 
 **Response**:
 
@@ -186,24 +181,15 @@ Resets the user's password using a provided token.
 
 **Errors**:
 
-- `400 Bad Request`: Invalid, expired, or used token.
-  ```json
-  {
-    "error": "Invalid token"
-  }
-  ```
-  ```json
-  {
-    "error": "Token invalid or expired"
-  }
-  ```
+- `400 Bad Request`: Validation error (e.g., blank token, weak new password).
+- `400 Bad Request`: Invalid token (token does not exist, is used, or expired).
 
 #### `GET /api/me`
 
-Retrieves the profile information for the authenticated user.
+Retrieves the authenticated user's profile information, including points, streak, and awarded badges.
+Requires a valid JWT in the `Authorization` header.
 
-**Request**:
-Requires `Authorization: Bearer <JWT_TOKEN>` header.
+**Request**: (No request body)
 
 **Response**:
 
@@ -211,8 +197,8 @@ Requires `Authorization: Bearer <JWT_TOKEN>` header.
 {
   "email": "user@example.com",
   "displayName": "John Doe",
-  "points": 50,
-  "streakCount": 7,
+  "points": 150,
+  "streakCount": 5,
   "badges": ["FIRST_DONE", "STREAK_7"]
 }
 ```
@@ -223,30 +209,30 @@ Requires `Authorization: Bearer <JWT_TOKEN>` header.
 
 #### `GET /api/todos`
 
-Retrieves a list of all todos for the authenticated user.
+Lists all todo items for the authenticated user.
+Requires a valid JWT in the `Authorization` header.
 
-**Request**:
-Requires `Authorization: Bearer <JWT_TOKEN>` header.
+**Request**: (No request body)
 
 **Response**:
 
 ```json
 [
   {
-    "id": "c1f7b0a8-3d5e-4e6f-8a9b-2c1e0d3f4a5b",
+    "id": "1a2b3c4d-5e6f-7890-1234-567890abcdef",
     "title": "Buy groceries",
     "notes": "Milk, eggs, bread",
-    "dueOn": "2024-07-01",
+    "dueOn": "2024-07-20",
     "done": false,
     "doneAt": null
   },
   {
-    "id": "d2g8c1b9-4e6f-5g7h-9b0c-3d2f1e4g5a6c",
+    "id": "f0e9d8c7-b6a5-4321-9876-543210fedcba",
     "title": "Finish report",
-    "notes": "Section 3 and conclusion",
-    "dueOn": "2024-06-28",
+    "notes": "Final review and submission",
+    "dueOn": "2024-07-18",
     "done": true,
-    "doneAt": "2024-06-27T10:30:00Z"
+    "doneAt": "2024-07-17T10:30:00Z"
   }
 ]
 ```
@@ -257,27 +243,31 @@ Requires `Authorization: Bearer <JWT_TOKEN>` header.
 
 #### `POST /api/todos`
 
-Creates a new todo for the authenticated user.
+Creates a new todo item for the authenticated user.
+Requires a valid JWT in the `Authorization` header.
 
 **Request**:
-Requires `Authorization: Bearer <JWT_TOKEN>` header.
 
 ```json
 {
   "title": "New important task",
-  "notes": "Remember to prepare for the meeting.",
-  "dueOn": "2024-07-15"
+  "notes": "Remember to prepare for the meeting",
+  "dueOn": "2024-07-25"
 }
 ```
+
+- `title` (string, required): Title of the todo item. Cannot be blank.
+- `notes` (string, optional): Additional notes for the todo item.
+- `dueOn` (string, optional, YYYY-MM-DD): The date when the todo is due.
 
 **Response**:
 
 ```json
 {
-  "id": "e3h9d2c0-5f7g-6h8i-0c1d-4e3g2f5h6a7d",
+  "id": "1a2b3c4d-5e6f-7890-1234-567890abcdef",
   "title": "New important task",
-  "notes": "Remember to prepare for the meeting.",
-  "dueOn": "2024-07-15",
+  "notes": "Remember to prepare for the meeting",
+  "dueOn": "2024-07-25",
   "done": false,
   "doneAt": null
 }
@@ -285,86 +275,104 @@ Requires `Authorization: Bearer <JWT_TOKEN>` header.
 
 **Errors**:
 
-- `400 Bad Request`: Validation errors (e.g., missing title).
+- `400 Bad Request`: Validation error (e.g., blank title).
 - `401 Unauthorized`: Missing or invalid JWT token.
 
 #### `PATCH /api/todos/{id}/complete`
 
-Marks a specific todo as complete for the authenticated user, awarding points, updating streak, and potentially awarding badges.
+Marks a specific todo item as complete for the authenticated user.
+Awards points, updates streak, and potentially awards badges.
+Requires a valid JWT in the `Authorization` header.
 
-**Request**:
-Requires `Authorization: Bearer <JWT_TOKEN>` header.
-The `{id}` in the path should be the UUID of the todo.
-No request body is required.
+**Request**: (No request body)
 
 **Response**:
 
 ```json
 {
-  "id": "c1f7b0a8-3d5e-4e6f-8a9b-2c1e0d3f4a5b",
-  "title": "Buy groceries",
-  "notes": "Milk, eggs, bread",
-  "dueOn": "2024-07-01",
+  "id": "1a2b3c4d-5e6f-7890-1234-567890abcdef",
+  "title": "New important task",
+  "notes": "Remember to prepare for the meeting",
+  "dueOn": "2024-07-25",
   "done": true,
-  "doneAt": "2024-06-27T11:45:00Z"
+  "doneAt": "2024-07-17T11:45:00Z"
 }
 ```
 
 **Errors**:
 
 - `401 Unauthorized`: Missing or invalid JWT token.
-- `404 Not Found`: Todo with the given ID not found for the authenticated user.
-
-## Usage
-
-Once the Gato API is running (e.g., via `docker-compose up`), you can interact with it using any HTTP client (like Postman, Insomnia, `curl`, or a frontend application).
-
-1.  **Register a New User**: Send a `POST` request to `/api/auth/register` with your email, display name, and a strong password.
-2.  **Log In**: Send a `POST` request to `/api/auth/login` with your registered email and password to receive a JWT token.
-3.  **Authenticate Requests**: Include the obtained JWT token in the `Authorization` header of subsequent requests: `Authorization: Bearer <YOUR_JWT_TOKEN>`.
-4.  **Manage Todos**:
-    - `GET /api/todos` to view your current tasks.
-    - `POST /api/todos` to add a new task.
-    - `PATCH /api/todos/{id}/complete` to mark a task as done and earn rewards!
-5.  **View Profile**: `GET /api/me` to see your points, streak, and awarded badges.
-
-## Technologies Used
-
-| Technology          | Description                                          | Link                                                          |
-| :------------------ | :--------------------------------------------------- | :------------------------------------------------------------ |
-| **Java 17+**        | Primary programming language                         | [Oracle Java](https://www.oracle.com/java/)                   |
-| **Spring Boot 3**   | Framework for building enterprise-grade applications | [Spring Boot](https://spring.io/projects/spring-boot)         |
-| **Spring Security** | Authentication and authorization framework           | [Spring Security](https://spring.io/projects/spring-security) |
-| **Spring Data JPA** | Data access layer with Hibernate                     | [Spring Data JPA](https://spring.io/projects/spring-data-jpa) |
-| **PostgreSQL**      | Robust relational database                           | [PostgreSQL](https://www.postgresql.org/)                     |
-| **Flyway**          | Database migration tool                              | [Flyway](https://flywaydb.org/)                               |
-| **JJWT**            | JSON Web Token library                               | [JJWT GitHub](https://github.com/jwtk/jjwt)                   |
-| **Lombok**          | Boilerplate code reduction                           | [Project Lombok](https://projectlombok.org/)                  |
-| **Maven**           | Build automation tool                                | [Apache Maven](https://maven.apache.org/)                     |
-| **Docker**          | Containerization platform                            | [Docker](https://www.docker.com/)                             |
-
-## Contributing
-
-We welcome contributions to Gato! If you're interested in improving this project, please consider the following guidelines:
-
-- Fork the repository.
-- Create a new branch for your feature or bug fix.
-- Ensure your code adheres to the project's coding style and passes all tests.
-- Submit a pull request with a clear description of your changes.
-
-## Author Info
-
-- **Chibueze Evans Okocha**
-  - LinkedIn: [Chibueze Evans Okocha](https://www.linkedin.com/in/chibueze-okocha-749a291a8?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app)
-  - Twitter: [@chisageo](https://twitter.com/chisageo)
+- `404 Not Found`: Todo item with the specified `id` does not exist or does not belong to the authenticated user.
 
 ---
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/yourusername/gato/actions)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2.0-6DB33F?logo=spring)](https://spring.io/projects/spring-boot)
-[![Java](https://img.shields.io/badge/Java-17-orange?logo=java)](https://www.java.com/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4254FF?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+## ✨ Features
+
+- **User Authentication**: Secure user registration and login with JWT-based authentication.
+- **Todo Management**: Create, view, and mark todo items as complete.
+- **Gamification System**:
+  - **Points**: Earn points for completing tasks.
+  - **Streaks**: Track and reward daily task completion streaks.
+  - **Badges**: Award badges for significant achievements (e.g., first task completed, 7-day streak).
+- **Password Reset**: Secure mechanism for users to reset forgotten passwords via email tokens.
+- **Robust Exception Handling**: Global exception handling for consistent error responses.
+- **Docker Support**: Easy deployment and development using Docker and Docker Compose.
+- **Database Migrations**: Managed database schema evolution using Flyway.
+- **Security**: Implemented with Spring Security, bcrypt password hashing, and JWTs.
+
+---
+
+## 🛠️ Technologies Used
+
+| Technology          | Version | Description                                                                     | Link                                                    |
+| :------------------ | :------ | :------------------------------------------------------------------------------ | :------------------------------------------------------ |
+| **Spring Boot**     | 3.5.5   | Framework for building stand-alone, production-grade Spring-based applications. | [Official Site](https://spring.io/projects/spring-boot) |
+| **Spring Data JPA** | 3.5.5   | Simplifies database access and persistence with JPA and Hibernate.              | [Official Docs](https://docs.spring.io/spring-data/jpa) |
+| **Spring Security** | 3.5.5   | Comprehensive security services for Java EE-based applications.                 | [Official Docs](https://docs.spring.io/spring-security) |
+| **PostgreSQL**      | Latest  | Powerful, open-source object-relational database system.                        | [Official Site](https://www.postgresql.org/)            |
+| **Flyway**          | Latest  | Database migration tool.                                                        | [Official Site](https://flywaydb.org/)                  |
+| **JJWT**            | 0.11.5  | Java JWT: industry-standard JSON Web Token library.                             | [GitHub Repo](https://github.com/jwtk/jjwt)             |
+| **Lombok**          | 1.18.32 | Reduces boilerplate code for Java classes.                                      | [Official Site](https://projectlombok.org/)             |
+| **Docker**          | Latest  | Platform for developing, shipping, and running applications in containers.      | [Official Site](https://www.docker.com/)                |
+| **Maven**           | 3.9.8   | Build automation tool for Java projects.                                        | [Official Site](https://maven.apache.org/)              |
+| **Testcontainers**  | Latest  | Lightweight, disposable containers for tests.                                   | [Official Site](https://testcontainers.org/)            |
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions to improve Gato! If you have suggestions or want to contribute:
+
+- ✨ **Fork the Repository**: Start by forking the project to your own GitHub account.
+- 🌿 **Create a New Branch**: Create a feature branch for your changes (e.g., `feature/add-dark-mode`).
+- 💡 **Implement Your Changes**: Write clean, well-tested code.
+- 🧪 **Write Tests**: Ensure your new features or bug fixes are covered by tests.
+- ⬆️ **Commit Your Changes**: Use clear and concise commit messages.
+- 📝 **Open a Pull Request**: Submit a pull request detailing your changes and the problem it solves.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## ✍️ Author Info
+
+**Chibueze Evans Okocha**
+
+- LinkedIn: [Chibueze Evans Okocha](https://linkedin.com/in/chibueze-okocha-749a291a8)
+- Twitter: [chisageo](https://twitter.com/chisageo)
+
+---
+
+## 🏅 Badges
+
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5.5-6DB33F?style=for-the-badge&logo=spring&logoColor=white)](https://spring.io/projects/spring-boot)
+[![Java](https://img.shields.io/badge/Java-17+-007396?style=for-the-badge&logo=java&logoColor=white)](https://www.java.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 [![Readme was generated by Dokugen](https://img.shields.io/badge/Readme%20was%20generated%20by-Dokugen-brightgreen)](https://www.npmjs.com/package/dokugen)
