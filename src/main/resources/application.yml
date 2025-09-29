@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/gato_db
+    username: gato
+    password: gato
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.jdbc.time_zone: UTC
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+logging:
+  level:
+    root: INFO
+    com.example.gato: DEBUG
+
+app:
+  jwt:
+    secret: '0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab'
+    expiryMinutes: 60
+  passwordReset:
+    tokenTtlMinutes: 30
