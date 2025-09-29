@@ -13,38 +13,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 
-// @Service
-// public class JwtService {
-
-//     @Value("${app.jwt.secret}")
-//     private String secret;
-//     @Value("${app.jwt.expiryMinutes}")
-//     private long expiryMinutes;
-
-//     public String generate(String subject) {
-//         Instant now = Instant.now();
-//         return Jwts.builder()
-//                 .setSubject(subject)
-//                 .setIssuedAt(Date.from(now))
-//                 .setExpiration(Date.from(now.plus(Duration.ofMinutes(expiryMinutes))))
-//                 .signWith(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
-//                 .compact();
-//     }
-
-//     public String extractSubject(String token) {
-//         return Jwts.parserBuilder()
-//                 .setSigningKey(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)))
-//                 .build()
-//                 .parseClaimsJws(token)
-//                 .getBody()
-//                 .getSubject();
-//     }
-// }
-
-// JwtService.java
-
-// JwtService.java
-
 @Service
 public class JwtService {
     @Value("${app.jwt.secret}")
