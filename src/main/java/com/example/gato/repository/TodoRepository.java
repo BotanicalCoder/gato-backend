@@ -9,4 +9,6 @@ public interface TodoRepository extends JpaRepository<Todo, UUID> {
     List<Todo> findByUser_Id(UUID userId);
 
     Optional<Todo> findByIdAndUser_Id(UUID id, UUID userId);
+
+    long countByUser_IdAndDoneTrue(UUID userId);
 }

@@ -2,6 +2,7 @@ package com.example.gato.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.ErrorResponseException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleERE(ErrorResponseException ex) {
         HttpStatus status = (HttpStatus) ex.getStatusCode();
         return ResponseEntity.status(status).body(Map.of("error", ex.getBody().getDetail()));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<?> handleAccessDenied(AccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Access denied"));
     }
 
     @ExceptionHandler(Exception.class)

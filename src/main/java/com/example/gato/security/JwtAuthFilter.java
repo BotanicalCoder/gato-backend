@@ -7,7 +7,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 @Component
 @RequiredArgsConstructor
@@ -24,7 +27,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final AppUserRepository users;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
+    protected void doFilterInternal(@NonNull HttpServletRequest req, @NonNull HttpServletResponse res,
+            @NonNull FilterChain chain)
             throws ServletException, IOException {
         String header = req.getHeader(HttpHeaders.AUTHORIZATION);
         if (header != null && header.startsWith("Bearer ")) {
@@ -32,9 +36,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             try {
                 String email = jwt.extractSubject(token);
                 users.findByEmail(email).ifPresent(u -> {
+                    var authorities = new ArrayList<SimpleGrantedAuthority>();
+                    authorities.add(new SimpleGrantedAuthority("USER"));
+                    if (u.isAdmin()) {
+                        authorities.add(new SimpleGrantedAuthority("ADMIN"));
+                    }
                     var principal = User.withUsername(u.getEmail())
                             .password(u.getPasswordHash())
-                            .authorities("USER")
+                            .authorities(authorities)
                             .build();
                     var auth = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
                     auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(req));

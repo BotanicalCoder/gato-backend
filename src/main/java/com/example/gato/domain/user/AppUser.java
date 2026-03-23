@@ -25,6 +25,9 @@ public class AppUser {
     @Column(name = "display_name", nullable = false)
     private String displayName;
 
+    @Column(name = "is_admin", nullable = false)
+    private boolean admin;
+
     @Column(nullable = false)
     private int points;
 

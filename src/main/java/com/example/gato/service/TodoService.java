@@ -2,9 +2,6 @@ package com.example.gato.service;
 
 import com.example.gato.api.todo.dto.CreateTodoDto;
 import com.example.gato.api.todo.dto.TodoDto;
-import com.example.gato.domain.badge.Badge;
-import com.example.gato.domain.badge.UserBadge;
-import com.example.gato.domain.badge.UserBadgeId;
 import com.example.gato.domain.todo.Todo;
 import com.example.gato.domain.user.AppUser;
 import com.example.gato.repository.*;
@@ -24,8 +21,7 @@ public class TodoService {
 
     private final AppUserRepository users;
     private final TodoRepository todos;
-    private final BadgeRepository badges;
-    private final UserBadgeRepository userBadges;
+    private final BadgeAwardService badgeAwards;
 
     public List<TodoDto> list(String email) {
         AppUser u = users.findByEmail(email).orElseThrow();
@@ -65,30 +61,11 @@ public class TodoService {
             }
             u.setLastDoneOn(today);
 
-            // Badges
-            maybeAward(u, "FIRST_DONE");
-            if (u.getStreakCount() == 7)
-                maybeAward(u, "STREAK_7");
-
             users.save(u);
+            badgeAwards.evaluateUserAsync(u.getId());
         }
 
         return map(t);
-    }
-
-    private void maybeAward(AppUser u, String code) {
-        Badge b = badges.findByCode(code).orElse(null);
-        if (b == null)
-            return;
-        if (userBadges.existsByUser_IdAndBadge_Id(u.getId(), b.getId()))
-            return;
-
-        userBadges.save(UserBadge.builder()
-                .id(new UserBadgeId(u.getId(), b.getId()))
-                .user(u)
-                .badge(b)
-                .awardedAt(Instant.now())
-                .build());
     }
 
     private TodoDto map(Todo t) {

@@ -22,4 +22,13 @@ public class Badge {
     private String name;
 
     private String description;
+
+    @Column(name = "min_points")
+    private Integer minPoints;
+
+    @Column(name = "min_streak_count")
+    private Integer minStreakCount;
+
+    @Column(name = "min_completed_todos")
+    private Integer minCompletedTodos;
 }

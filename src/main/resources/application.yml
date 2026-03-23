@@ -3,6 +3,17 @@ spring:
     url: jdbc:postgresql://localhost:5432/gato_db
     username: gato
     password: gato
+  mail:
+    host: ${SMTP_HOST:}
+    port: ${SMTP_PORT:587}
+    username: ${SMTP_USERNAME:}
+    password: ${SMTP_PASSWORD:}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.connectiontimeout: 5000
+      mail.smtp.timeout: 5000
+      mail.smtp.writetimeout: 5000
   jpa:
     hibernate:
       ddl-auto: validate
@@ -23,3 +34,6 @@ app:
     expiryMinutes: 60
   passwordReset:
     tokenTtlMinutes: 30
+  mail:
+    fromAddress: ${MAIL_FROM_ADDRESS:no-reply@gato.local}
+    fromName: ${MAIL_FROM_NAME:Gato}
